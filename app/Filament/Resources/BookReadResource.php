@@ -23,7 +23,7 @@ class BookReadResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationGroup = 'Library';
-    protected static ?string $navigationLabel = 'Reading History';
+    protected static ?string $navigationLabel = 'Riwayat Baca ⌛';
 
     // public static function form(Form $form): Form
     // {
@@ -94,11 +94,10 @@ class BookReadResource extends Resource
             'edit' => Pages\EditBookRead::route('/{record}/edit'),
         ];
     }
-    public static function canViewAny(): bool
-    {
-        // Hanya admin yang bisa melihat semua riwayat baca, user bisa lihat punya sendiri
-        return (Auth::user())->isAdmin() || Auth::user()->id == request()->route('record')->user_id;
-    }
+    // public static function canViewAny(): bool
+    // {
+    //   return (Auth::user())->isAdmin() || Auth::user()->id == request()->route('record')->user_id;
+    // }
 
     public static function canCreate(): bool
     {

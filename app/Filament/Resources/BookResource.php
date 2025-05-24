@@ -25,7 +25,8 @@ use Filament\Tables\Columns\IconColumn;
 use Illuminate\Support\Facades\Storage; 
 
 use Illuminate\Support\Facades\Auth;
-
+use Filament\Tables\Actions\Action;
+use App\Filament\Pages\ReadBookPage;
 
 class BookResource extends Resource
 {
@@ -33,7 +34,7 @@ class BookResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationGroup = 'Library';
-    protected static ?string $navigationLabel = 'Books Management';
+    protected static ?string $navigationLabel = 'Daftar Buku 📙';
 
     public static function form(Form $form): Form
     {
@@ -106,12 +107,13 @@ class BookResource extends Resource
                   ->sortable()
                   ->searchable(),
                 ImageColumn::make('cover_image')
-                  ->label('Cover Image')
+                  ->label('Cover Buku')
                   ->width(100)  
                   ->height(140)
                   ->sortable()
                   ->square(),
                 TextColumn::make('author')
+                  ->label('Penulis')
                   ->searchable()
                   ->sortable(),
                 TextColumn::make('publisher')
@@ -169,6 +171,11 @@ class BookResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Action::make('Read')
+                ->url(fn (Book $record) => ReadBookPage::getUrl(['book' => $record->id]))
+                  ->label('Baca Buku')
+                  ->icon('heroicon-o-book-open'),
+                  // ->openUrlInNewTab(),
                 // Tables\Actions\Action::make('view')
                 //     ->url(fn (Book $record) => route('books.show', $record)),
             ])
@@ -205,10 +212,10 @@ class BookResource extends Resource
     }
 
      // Authorization: Hanya admin yang bisa mengelola buku
-    public static function canViewAny(): bool
-    {
-        return (Auth::user())->isAdmin();
-    }
+    // public static function canViewAny(): bool
+    // {
+    //     return (Auth::user())->isAdmin();
+    // }
 
     public static function canCreate(): bool
     {

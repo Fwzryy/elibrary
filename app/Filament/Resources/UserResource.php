@@ -29,7 +29,7 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
     // Label di sidebar (opsional)
-    protected static ?string $navigationLabel = 'Users Management';
+    protected static ?string $navigationLabel = 'Daftar Pengguna 👨🏻‍💻';
 
     // Urutan di sidebar (opsional)
     protected static ?int $navigationSort = 1;

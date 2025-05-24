@@ -19,6 +19,13 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\PaymentResource; // Tambahkan ini
 use App\Filament\Resources\BookReadResource;
+use App\Filament\Pages\ReadBookPage;
+use App\Filament\Pages\SubscriptionPage;
+use App\Filament\Pages\PricingPage;
+use App\Filament\Widgets\SubscriptionStatusWidget;
+use App\Filament\Widgets\LatestBooksWidget; 
+
+use Illuminate\Support\Facades\Auth;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,18 +38,28 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->spa()
             ->login()
+            ->registration()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Violet,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                ReadBookPage::class,
+                SubscriptionPage::class,
+                PricingPage::class,
+                
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+
+                // Widget Status Langganan
+                SubscriptionStatusWidget::class, 
+                // Widget Buku Terbaru
+                LatestBooksWidget::class, 
             ])
             ->middleware([
                 EncryptCookies::class,

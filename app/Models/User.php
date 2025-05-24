@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Filament\Panel;
 
 class User extends Authenticatable
 {
@@ -22,8 +23,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
         'role',
         'subscription_ends_at',
+        'subscription_start_at',
     ];
 
     /**
@@ -45,6 +48,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'subscription_ends_at' => 'datetime',
+        'subscription_start_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -84,8 +89,11 @@ class User extends Authenticatable
      */
     public function hasActiveSubscription(): bool
     {
-        // Langganan aktif jika subscription_ends_at tidak null DAN tanggal berakhirnya di masa depan
-        // Pastikan $this->subscription_ends_at adalah instance dari Carbon
         return $this->subscription_ends_at !== null && $this->subscription_ends_at->isFuture();
+    }
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Izinkan user dengan role 'admin' untuk mengakses panel
+        return $this->isAdmin(); // Menggunakan metode isAdmin() yang sudah Anda miliki
     }
 }
