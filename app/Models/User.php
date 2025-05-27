@@ -61,11 +61,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Relasi: Seorang User memiliki banyak BookReads.
+     * Relasi: Seorang User memiliki banyak ReadHistory
      */
-    public function bookReads(): HasMany
+    public function readHistories(): HasMany
     {
-        return $this->hasMany(BookRead::class);
+        return $this->hasMany(ReadHistory::class);
     }
 
     /**
@@ -91,9 +91,16 @@ class User extends Authenticatable
     {
         return $this->subscription_ends_at !== null && $this->subscription_ends_at->isFuture();
     }
+    
+    public function isActiveSubscriber(): bool
+    {
+        return $this->subscription_ends_at && Carbon::parse($this->subscription_ends_at)->isFuture();
+    }
+
+
     public function canAccessPanel(Panel $panel): bool
     {
         // Izinkan user dengan role 'admin' untuk mengakses panel
-        return $this->isAdmin(); // Menggunakan metode isAdmin() yang sudah Anda miliki
+        return $this->isAdmin();
     }
 }

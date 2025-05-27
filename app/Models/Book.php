@@ -43,11 +43,9 @@ class Book extends Model
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * Relasi: Sebuah Book memiliki banyak BookReads.
-     */
-    public function bookReads(): HasMany
+
+    public function readHistories(): HasMany
     {
-        return $this->hasMany(BookRead::class);
+        return $this->hasMany(ReadHistory::class);
     }
 }
