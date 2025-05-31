@@ -139,11 +139,9 @@ class PaymentResource extends Resource
                     ->sortable(),
 
                 ImageColumn::make('proof_image')
-                    ->label('Bukti')
-                    ->disk('public') // Opsional, tapi baik untuk kejelasan
-                    ->size(40)
-                    ->circular()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Bukti Pembayaran')
+                    ->disk('public') 
+                    ->size(90),
 
                 TextColumn::make('paid_at')
                     ->label('Dibayar Pada')

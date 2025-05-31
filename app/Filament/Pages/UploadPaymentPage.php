@@ -64,7 +64,9 @@ class UploadPaymentPage extends Page implements HasForms
                 ->options([
                     'bank_transfer' => 'Transfer Bank (BCA/Mandiri)',
                     'e_wallet' => 'E-Wallet (Dana/OVO)',
+                    'qris' => 'E-Wallet (QRIS)',
                 ])
+                ->default('bank_transfer')
                 ->required()
                 ->placeholder('Pilih metode pembayaran'),
 
