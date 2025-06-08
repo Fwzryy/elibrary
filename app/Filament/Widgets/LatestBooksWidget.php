@@ -10,6 +10,7 @@ class LatestBooksWidget extends Widget
 {
     // Ini menunjuk ke view Blade kustom untuk widget ini
     protected static string $view = 'filament.widgets.latest-books-widget';
+    protected static ?string $heading = 'Buku-Buku Terbaru nih! 🆕'; 
     protected int | string | array $columnSpan = 1;
     // Properti untuk menyimpan data buku terbaru
     public array $latestBooks = [];

@@ -22,13 +22,13 @@ class ReadBookPage extends Page
     protected static ?string $resource = null;
 
     public ?Book $book = null;
-    public ?int $currentPage = 1; // Properti untuk melacak halaman saat ini
-    public ?float $progressPercentage = 0.0; // Properti untuk melacak persentase progres
+    public ?int $currentPage = 1; 
+    public ?float $progressPercentage = 0.0; 
 
      // Properti untuk menyimpan instance ReadHistory
     public ?ReadHistory $readHistory = null;
 
-    public function mount(Book $book): void // mount(int $book)
+    public function mount(Book $book): void 
     {
         // $this->book = Book::findOrFail($book);
         $this->book = $book;

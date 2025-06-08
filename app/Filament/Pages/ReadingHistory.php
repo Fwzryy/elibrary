@@ -6,14 +6,16 @@ use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ReadHistory; // Import model ReadHistory
 use Carbon\Carbon; // Import Carbon
+use Illuminate\Database\Eloquent\Collection;
 
 class ReadingHistory extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static string $view = 'filament.pages.reading-history';
-    protected static ?string $title = 'Riwayat Baca Saya';
+    protected static ?string $title = 'Riwayat Baca Saya ⏱️';
     protected static ?string $navigationGroup = 'Library';
     protected static ?string $navigationLabel = 'Riwayat Baca';
+    // protected static ?int $navigationSort = 4; 
 
     public $readHistories; // Properti untuk menyimpan riwayat baca
 

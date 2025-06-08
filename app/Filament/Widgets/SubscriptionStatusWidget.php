@@ -16,6 +16,8 @@ class SubscriptionStatusWidget extends Widget
     public ?string $startDate = null;
     public ?string $endDate = null;
     public ?string $remainingDays = null;
+    protected static ?string $heading = 'Status Langganan ku 💳'; 
+
 
 
     protected function getViewData(): array
@@ -23,19 +25,18 @@ class SubscriptionStatusWidget extends Widget
         $user = Auth::user();
 
         if ($user->subscription_start_at) {
-            // Ambil pembayaran 'approved' terbaru yang terkait dengan user dan paket langganan
             $latestApprovedPayment = $user->payments()
                                         ->where('status', 'approved')
                                         ->whereNotNull('approved_at')
-                                        ->latest('approved_at') // Urutkan berdasarkan waktu approve terbaru
-                                        ->with('subscriptionPackage') // Eager load relasi paket
+                                        ->latest('approved_at') 
+                                        ->with('subscriptionPackage') 
                                         ->first();
 
             if ($latestApprovedPayment && $latestApprovedPayment->subscriptionPackage) {
                 $package = $latestApprovedPayment->subscriptionPackage;
 
                 $this->packageDetails = $package->name . ' (' . $package->duration_days . ' Hari)';
-                $this->startDate = Carbon::parse($user->subscription_start_at)->translatedFormat('d F Y'); // Menggunakan kolom di users
+                $this->startDate = Carbon::parse($user->subscription_start_at)->translatedFormat('d F Y'); 
                 $endDate = Carbon::parse($user->subscription_start_at)->addDays($package->duration_days);
                 $this->endDate = $endDate->translatedFormat('d F Y');
 
@@ -47,7 +48,7 @@ class SubscriptionStatusWidget extends Widget
                     $this->remainingDays = '0 hari tersisa';
                 }
             } else {
-                $this->subscriptionStatus = 'Belum Berlangganan'; // Atau ada pembayaran tapi paket tidak ditemukan
+                $this->subscriptionStatus = 'Belum Berlangganan';
             }
         }
 

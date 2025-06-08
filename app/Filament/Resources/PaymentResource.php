@@ -2,31 +2,33 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PaymentResource\Pages;
-use App\Filament\Resources\PaymentResource\RelationManagers;
-use App\Models\Payment;
-use App\Models\Subscription;
+use Log;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\IconColumn;
-use Illuminate\Support\Facades\Auth; // Import Auth
-use Filament\Forms\Components\FileUpload;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Actions\Action;
+use App\Models\Payment;
+use Filament\Forms\Form;
 use Filament\Forms\Set; 
+use Filament\Tables\Table;
+use App\Enums\PaymentStatus;
+use App\Models\Subscription;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\Storage;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Resources\PaymentResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth; // Import Auth
+use App\Filament\Resources\PaymentResource\RelationManagers;
 
 class PaymentResource extends Resource
 {
@@ -172,36 +174,44 @@ class PaymentResource extends Resource
                     ->modalHeading('Approve Pembayaran?')
                     ->modalDescription('Apakah Anda yakin ingin menyetujui pembayaran ini? Status user akan diperbarui.')
                     ->action(function (Payment $record) {
-                        // Logika APPROVE
-                        $record->status = \App\Enums\PaymentStatus::Approved;
-                        $record->approved_at = now(); // Set tanggal disetujui
-                        $record->save();
+                      \Illuminate\Support\Facades\DB::beginTransaction();
+            try {
+                // Dapatkan user terkait
+                $user = $record->user;
 
-                        // Update status langganan user
-                        $user = $record->user;
-                        $user->subscription_start_at = now(); // Set tanggal mulai langganan
+                $subscriptionPackage = $record->subscriptionPackage; // Menggunakan relasi
 
-                        // Hitung tanggal berakhir berdasarkan package_name / subscription_id
-                        // Anda perlu membuat logic ini
-                        // Contoh sederhana (sesuaikan dengan ID paket Anda)
-                        if ($record->subscription_id == 30) { // Misal ID paket 30 hari
-                            $user->subscription_ends_at = now()->addDays(30);
-                        } elseif ($record->subscription_id == 90) { // Misal ID paket 90 hari
-                            $user->subscription_ends_at = now()->addDays(90);
-                        } else {
-                            // Default atau handling jika subscription_id tidak dikenal
-                            $user->subscription_ends_at = now()->addDays(30); // Default 30 hari
-                        }
+                if (!$subscriptionPackage) {
+                    throw new \Exception("Paket langganan terkait pembayaran tidak ditemukan atau tidak valid dengan ID " . ($record->subscription_id ?? 'NULL') . ". Mohon periksa data pembayaran.");
+                }
+                $record->subscription_id = $subscriptionPackage->id; 
 
-                        // Jika Anda punya kolom is_subscriber di User
-                        // $user->is_subscriber = true;
+                $record->status = PaymentStatus::Approved;
+                $record->approved_at = now(); // Set tanggal disetujui
+                $record->save(); 
 
-                        $user->save();
+                // Perbarui status langganan user
+                $user->subscription_start_at = now();
+                $user->subscription_ends_at = now()->addDays($subscriptionPackage->duration_days); // Durasi dari paket
+                $user->save(); // Simpan perubahan user
 
-                        \Filament\Notifications\Notification::make()
-                            ->title('Pembayaran disetujui!')
-                            ->success()
-                            ->send();
+                \Illuminate\Support\Facades\DB::commit();
+
+                \Filament\Notifications\Notification::make()
+                    ->title('Pembayaran disetujui!')
+                    ->body('Pembayaran berhasil disetujui dan langganan user telah diaktifkan.')
+                    ->success()
+                    ->send();
+
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\DB::rollBack();
+                // Log::error('Error approving payment: ' . $e->getMessage(), ['payment_id' => $record->id, 'user_id' => $record->user_id, 'subscription_id_on_record' => $record->subscription_id ?? 'N/A']);
+                \Filament\Notifications\Notification::make()
+                    ->title('Gagal menyetujui pembayaran!')
+                    ->body('Terjadi kesalahan: ' . $e->getMessage() . ' Mohon periksa log Laravel untuk detail.')
+                    ->danger()
+                    ->send();
+            }
                     }),
                 // Custom action untuk Reject (opsional)
                 Action::make('Reject')

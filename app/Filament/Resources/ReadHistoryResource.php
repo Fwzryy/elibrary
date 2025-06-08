@@ -43,6 +43,9 @@ class ReadHistoryResource extends Resource
                     ->nullable(),
                 Forms\Components\DateTimePicker::make('last_read_at')
                     ->nullable(),
+                Forms\Components\DateTimePicker::make('finished_at')
+                    ->label('Selesai Dibaca Pada')
+                    ->nullable(),
             ]);
     }
 
@@ -68,6 +71,11 @@ class ReadHistoryResource extends Resource
                     ->label('Terakhir Dibaca')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('finished_at')
+                    ->label('Selesai Dibaca')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true), 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

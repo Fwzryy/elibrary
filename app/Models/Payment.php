@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo; 
+use App\Models\Subscription; 
+use App\Models\SubscriptionPackage;
 
 class Payment extends Model
 {
@@ -20,7 +22,7 @@ class Payment extends Model
      */
     protected $fillable = [
     'user_id',
-    'subscription_package_id',
+    // 'subscription_package_id',
     'amount',
     'status',
     'payment_method',
@@ -29,6 +31,7 @@ class Payment extends Model
     'proof_image',
     'notes',
     'paid_at',
+    'approved_at',
 ];
   
     /**
@@ -40,9 +43,10 @@ class Payment extends Model
         'amount' => 'decimal:2', 
         'status' => \App\Enums\PaymentStatus::class,
         'paid_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
-       public static function booted(): void
+      public static function booted(): void
     {
         static::updated(function (self $payment) {
             if ($payment->isDirty('status') && $payment->status === PaymentStatus::Approved) {
@@ -79,14 +83,12 @@ class Payment extends Model
                             'end_date' => $newEndDate,
                             // 'start_date' tidak perlu diupdate jika diperpanjang
                         ]));
-                        $payment->update(['subscription_id' => $latestSubscription->id]);
                     } else {
                         // Buat langganan baru
                         $newSubscription = Subscription::create(array_merge($subscriptionData, [
                             'start_date' => now(),
                             'end_date' => now()->addDays($package->duration_days),
                         ]));
-                        $payment->update(['subscription_id' => $newSubscription->id]);
                     }
 
                     // Sinkronkan subscription_ends_at di model User

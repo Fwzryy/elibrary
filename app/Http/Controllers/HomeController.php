@@ -2,19 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book; // Import model Book 
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index(): View
+    public function index()
     {
-        // Mengambil 3 buku terbaru berdasarkan tanggal pembuatan (created_at).
-        $latestBooks = Book::orderBy('created_at', 'desc')->limit(3)->get();
+        return view('welcome'); // Ini akan menampilkan welcome.blade.php
+    }
 
-        // Mengirim data $latestBooks ke view 'welcome.blade.php'
-        return view('welcome', [
-            'latestBooks' => $latestBooks,
-        ]);
+    public function showSubscriptionPackages()
+    {
+        // Data dummy untuk paket langganan
+        $packages = [
+            [
+                'name' => 'Paket Gratis',
+                'price' => 'Rp 0',
+                'label' => 'Saat Ini', 
+                'highlight' => false,
+                'features' => [
+                    'Akses Terbatas ke Buku Pilihan',
+                    'Baca Online Saja',
+                    'Iklan',
+                    'Dukungan Komunitas',
+                    'Tidak Ada Download Offline',
+                ],
+                'link' => '#'
+            ],
+            [
+                'name' => 'Premium 30 Hari',
+                'price' => 'Rp 20.000',
+                'label' => 'Hemat!', 
+                'highlight' => true,
+                'features' => [
+                    'Akses Penuh ke Semua Buku',
+                    'Baca Online & Offline',
+                    'Bebas Iklan',
+                    'Dukungan Prioritas',
+                    'Update Buku Mingguan',
+                ],
+                'link' => '#'
+            ],
+            [
+                'name' => 'Premium 90 Hari',
+                'price' => 'Rp 55.000',
+                'label' => 'Terpopuler', 
+                'highlight' => false,
+                'features' => [
+                    'Akses Penuh ke Semua Buku',
+                    'Baca Online & Offline',
+                    'Bebas Iklan',
+                    'Dukungan Prioritas',
+                    'Update Buku Mingguan',
+                ],
+                'link' => '#' 
+            ],
+        ];
+
+        return view('paketlangganan', compact('packages'));
+    }
+
+    public function showAboutUsPage()
+    {
+        return view('tentangkami'); // Memuat tampilan tentangkami.blade.php
     }
 }

@@ -6,15 +6,16 @@
         {{-- Penulis --}}
         <p class="text-gray-700 dark:text-gray-400">{{ $book->author }} — Author</p>
         <hr class="my-4 border-gray-300 dark:border-gray-700" />
-        
-      {{-- @if(Auth::check())
-        <div class="mb-4">
-            <p class="text-sm text-gray-500">Progres Anda: {{ round($progressPercentage) }}% (Halaman {{ $currentPage }} / {{ $book->total_pages }})</p>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $progressPercentage }}%"></div>
+
+      {{-- Tampilkan Progres Membaca (hanya jika user login) --}}
+        @if(Auth::check())
+            <div class="mb-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Progres Anda: {{ round($progressPercentage) }}% (Halaman {{ $currentPage }} / {{ $book->total_pages ?? 'N/A' }})</p>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $progressPercentage }}%"></div>
+                </div>
             </div>
-        </div>
-        @endif --}}
+        @endif
 
         @if ($book->file_path)
             <div class="relative w-full" style="height: 85vh;">
@@ -42,36 +43,69 @@
             </div>
       @endif
     </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf_viewer.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf_viewer.min.css">
 
     {{-- JS untuk tracking scroll iframe --}}
     @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const iframe = document.getElementById('pdf-reader');
+          document.addEventListener('livewire:navigated', () => {
+            const pdfUrl = "{{ Storage::url($book->file_path) }}";
+            const currentPageFromPHP = {{ $currentPage }};
+            const totalPagesFromPHP = {{ $book->total_pages ?? 1 }};
 
-            const interval = setInterval(() => {
-                try {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const scrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
-                    const scrollHeight = iframeDoc.documentElement.scrollHeight || iframeDoc.body.scrollHeight;
-                    const clientHeight = iframeDoc.documentElement.clientHeight || iframeDoc.body.clientHeight;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                    const scrollPercentage = Math.min(100, (scrollTop / (scrollHeight - clientHeight)) * 100);
-                    const totalPages = {{ $book->total_pages }};
-                    const estimatedPage = Math.max(1, Math.round((scrollPercentage / 100) * totalPages));
+            const viewerContainer = document.getElementById('viewerContainer');
+            const viewer = document.getElementById('viewer');
 
-                    // Kirim data ke Livewire
-                    Livewire.dispatch('updateScrollProgress', {
-                        pageNumber: estimatedPage,
-                        progressPercentage: scrollPercentage.toFixed(2)
-                    });
+            if (!viewerContainer || !viewer) {
+                console.error('PDF viewer elements not found.');
+                return;
+              }
+            const eventBus = new pdfjsViewer.EventBus(); 
 
-                } catch (e) {
-                    // iframe belum siap atau cross-origin error
-                }
-            }, 5000); // setiap 5 detik
+            const pdfLinkService = new pdfjsViewer.PDFLinkService({
+              eventBus: eventBus,
+            });
 
-            window.addEventListener('beforeunload', () => clearInterval(interval));
+            const pdfViewer = new pdfjsViewer.PDFViewer({
+                container: viewerContainer,
+                eventBus: eventBus,
+                linkService: pdfLinkService,
+              });
+            pdfLinkService.setViewer(pdfViewer);
+
+             // Muat dokumen PDF
+            pdfjsLib.getDocument({ url: pdfUrl }).promise.then(pdfDocument => {
+            pdfViewer.setDocument(pdfDocument);
+            pdfLinkService.setDocument(pdfDocument, null);
+
+            if (currentPageFromPHP > 1 && currentPageFromPHP <= pdfDocument.numPages) {
+              pdfViewer.currentPageNumber = currentPageFromPHP;
+            }
+
+            // Event listener untuk mendeteksi perubahan halaman saat scroll 
+            eventBus.on('pagechanging', function(evt) {
+              const newPageNumber = evt.pageNumber; 
+              const newProgressPercentage = (newPageNumber / pdfDocument.numPages) * 100;
+
+              Livewire.dispatch('updateScrollProgress', { pageNumber: newPageNumber, progressPercentage: newProgressPercentage });
+            });
+
+          //buat update progres awal pas halaman dimuat/dirender
+            eventBus.on('pagesinit', function() {
+              const initialPageNumber = pdfViewer.currentPageNumber;
+              const initialProgressPercentage = (initialPageNumber / pdfDocument.numPages) * 100;
+              Livewire.dispatch('updateScrollProgress', { pageNumber: initialPageNumber, progressPercentage: initialProgressPercentage });
+          });
+
+          }).catch(function(exception) {
+            console.error('Error loading PDF:', exception);
+            alert('Gagal memuat PDF: ' + exception.message);
+          });
         });
     </script>
     @endpush

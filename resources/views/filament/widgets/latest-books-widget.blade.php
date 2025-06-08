@@ -1,8 +1,8 @@
 <x-filament::widget>
     <x-filament::card>
-        <x-slot name="heading">
-            Buku Terbaru
-        </x-slot>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            {{ static::$heading }}
+        </h3>
 
         @if (count($latestBooks) > 0)
             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -12,8 +12,6 @@
                             {{ $book['title'] }}
                         </a>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $book['author'] }}</p>
-                        {{-- Anda bisa menambahkan link ke halaman detail buku jika ada --}}
-                        {{-- <a href="{{ url('/books/' . $book['slug']) }}" class="text-sm text-primary-600 hover:underline">Baca</a> --}}
                     </li>
                 @endforeach
             </ul>
