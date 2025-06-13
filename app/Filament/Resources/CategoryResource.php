@@ -127,4 +127,9 @@ class CategoryResource extends Resource
     {
         return (Auth::user())->isAdmin();
     }
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = Auth::user();
+        return $user && ! $user->isAdmin();
+    }
 }

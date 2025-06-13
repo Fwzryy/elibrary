@@ -25,13 +25,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    //Icon untuk navigasi di sidebar Filament
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    // Label di sidebar (opsional)
     protected static ?string $navigationLabel = 'Daftar Pengguna 👨🏻‍💻';
 
-    // Urutan di sidebar (opsional)
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -53,14 +50,14 @@ class UserResource extends Resource
                   ])
                   ->required()
                   ->default('user'),
-                DateTimePicker::make('subscription_ends_at') // Field untuk tanggal berakhir langganan
+                DateTimePicker::make('subscription_ends_at')
                   ->label('Subscription End Date')
-                  ->nullable(), // Bisa kosong jika user tidak berlangganan
+                  ->nullable(), 
                 TextInput::make('password')
                   ->password()
-                  ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)) // Hash password sebelum disimpan
-                  ->dehydrated(fn (?string $state): bool => filled($state)) // Hanya simpan jika field diisi
-                  ->required(fn (string $operation): bool => $operation === 'create') // Wajib saat membuat user baru
+                  ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)) 
+                  ->dehydrated(fn (?string $state): bool => filled($state)) 
+                  ->required(fn (string $operation): bool => $operation === 'create') 
                   ->maxLength(255),
             ]);
     }
@@ -75,8 +72,8 @@ class UserResource extends Resource
                 TextColumn::make('email')
                   ->searchable()
                   ->sortable(),
-                TextColumn::make('role') // Tampilkan role
-                  ->badge() // Tampilkan sebagai badge (opsional, tapi bagus)
+                TextColumn::make('role') 
+                  ->badge() 
                   ->color(fn (string $state): string => match ($state) {
                       'admin' => 'success',
                       'user' => 'info',

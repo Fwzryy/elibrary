@@ -28,7 +28,7 @@ use App\Filament\Pages\SubscriptionPage;
 use App\Filament\Pages\PricingPage;
 use App\Filament\Pages\ReadingHistory;
 use App\Filament\Pages\UploadPaymentPage;
-// use App\Filament\Pages\BookList;
+use App\Filament\Pages\LibraryManagement;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\AdminOverview;

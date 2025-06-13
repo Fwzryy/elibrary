@@ -26,7 +26,6 @@ class ContinueReadingWidget extends Widget
         }
     }
 
-    // Hanya user non-admin yang bisa melihat widget ini
     public static function shouldBeVisible(): bool
     {
         $user = Auth::user();

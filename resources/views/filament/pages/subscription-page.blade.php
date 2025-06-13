@@ -43,7 +43,8 @@
                 Akses Premium Dimulai dari Rp 20.000 Saja!
             </div>
 
-            <button class="button"><a href="{{ \App\Filament\Pages\PricingPage::getUrl() }}"wire:navigate>
+            <button class="button">
+              <a href="{{ \App\Filament\Pages\PricingPage::getUrl() }}"wire:navigate>
                 Lihat Paket Langganan Ini
             </a></button>
             

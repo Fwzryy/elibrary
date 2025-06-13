@@ -137,7 +137,8 @@ class BookResource extends Resource
                   ->icon('heroicon-o-document')
                   ->copyable()
                   ->formatStateUsing(fn (string $state): string => basename($state))
-                  ->limit(10),
+                  ->limit(10)
+                  ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('total_pages')
                   ->label('Total Pages')
                   ->sortable()
@@ -201,8 +202,13 @@ class BookResource extends Resource
             'edit' => Pages\EditBook::route('/{record}/edit'),
         ];
     }
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = Auth::user();
+        return $user && ! $user->isAdmin();
+    }
 
-     public static function getGloballySearchableAttributes(): array
+    public static function getGloballySearchableAttributes(): array
     {
         return [
             'title',

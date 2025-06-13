@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
+
 
 class SubscriptionResource extends Resource
 {
@@ -167,6 +169,9 @@ class SubscriptionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+             ->headerActions([
+                FilamentExportHeaderAction::make('export'),
+             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('user_id') // Filter berdasarkan user
                     ->relationship('user', 'name')

@@ -14,13 +14,18 @@ use App\Filament\Widgets\PremiumUserGrowthChart;
 use App\Filament\Widgets\RevenueChart;
 use App\Filament\Widgets\UserCategoryReadChart;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class Dashboard extends BaseDashboard
 {
-    // Anda bisa mengoverride judul jika ingin
-    protected static ?string $title = 'Dashboard Utama Saya 🖥️';
+    protected static ?string $title = null;
+    public ?User $user = null;
+    /// metode mount() untuk mengisi properti user
+    public function mount(): void 
+    {
+        $this->user = Auth::user();
+    }
 
-    // Override metode ini untuk mengontrol widget apa yang muncul di dashboard utama
     public function getWidgets(): array
     {
         $user = Auth::user();
@@ -46,6 +51,16 @@ class Dashboard extends BaseDashboard
             ];
         }
     }
+
+    // Metode untuk menyediakan data ke header Blade kustom
+    public function getHeader(): ?\Illuminate\Contracts\View\View
+    {
+        return view('filament.pages.dashboard-header', [
+            'user' => $this->user, 
+            'is_admin' => $this->user->isAdmin(),
+        ]);
+    }
+
     public static function shouldBeVisible(): bool
     {
         return Auth::check();

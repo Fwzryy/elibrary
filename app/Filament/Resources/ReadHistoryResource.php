@@ -34,13 +34,6 @@ class ReadHistoryResource extends Resource
                     ->required()
                     ->searchable()
                     ->preload(),
-                Forms\Components\TextInput::make('last_page_read')
-                    ->numeric()
-                    ->nullable(),
-                Forms\Components\TextInput::make('progress_percentage')
-                    ->numeric()
-                    ->step(0.01)
-                    ->nullable(),
                 Forms\Components\DateTimePicker::make('last_read_at')
                     ->nullable(),
                 Forms\Components\DateTimePicker::make('finished_at')
@@ -58,14 +51,6 @@ class ReadHistoryResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('book.title')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_page_read')
-                    ->label('Halaman Terakhir')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('progress_percentage')
-                    ->label('Progres (%)')
-                    ->formatStateUsing(fn (string $state): string => "{$state}%")
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_read_at')
                     ->label('Terakhir Dibaca')

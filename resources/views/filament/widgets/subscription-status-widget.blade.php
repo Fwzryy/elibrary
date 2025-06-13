@@ -41,7 +41,7 @@
             @if ($subscriptionStatus === 'Belum Berlangganan' || $subscriptionStatus === 'Kadaluarsa')
                 <div>
                     <p class="text-gray-500 text-sm">Anda belum memiliki langganan aktif. ❌</p>
-                    <a href="{{ url('/admin/payments/create') }}" class="filament-link text-white hover:underline filament-button inline-flex items-center justify-center px-4 py-2 bg-primary-600 rounded-lg hover:bg-primary-700 text-sm mt-3 "
+                    <a href="{{ url('/admin/pricing-page') }}" class="filament-link text-white hover:underline filament-button inline-flex items-center justify-center px-4 py-2 bg-primary-600 rounded-lg hover:bg-primary-700 text-sm mt-3 "
                       wire:navigate>
                         Pilih Paket Langganan ✨
                     </a>

@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth; // Import Auth
 use App\Filament\Resources\PaymentResource\RelationManagers;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
+
 class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
@@ -131,15 +133,15 @@ class PaymentResource extends Resource
                     ->label('ID Paket')
                     ->toggleable(isToggledHiddenByDefault: true), // Sembunyikan secara default
 
-                BadgeColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
-                    ->colors([ // Warna diambil dari Enum (HasColor)
-                        'pending' => 'warning',
-                        'approved' => 'success',
-                        'rejected' => 'danger',
-                    ])
+                    // ->colors([ // Warna diambil dari Enum (HasColor)
+                    //     'pending' => 'warning',
+                    //     'approved' => 'success',
+                    //     'rejected' => 'danger',
+                    // ])
                     ->sortable(),
-
+                    
                 ImageColumn::make('proof_image')
                     ->label('Bukti Pembayaran')
                     ->disk('public') 
@@ -157,6 +159,9 @@ class PaymentResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+            ])
+            ->headerActions([
+                FilamentExportHeaderAction::make('export'),
             ])
             ->filters([
               SelectFilter::make('status')
@@ -205,7 +210,6 @@ class PaymentResource extends Resource
 
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\DB::rollBack();
-                // Log::error('Error approving payment: ' . $e->getMessage(), ['payment_id' => $record->id, 'user_id' => $record->user_id, 'subscription_id_on_record' => $record->subscription_id ?? 'N/A']);
                 \Filament\Notifications\Notification::make()
                     ->title('Gagal menyetujui pembayaran!')
                     ->body('Terjadi kesalahan: ' . $e->getMessage() . ' Mohon periksa log Laravel untuk detail.')
@@ -236,6 +240,7 @@ class PaymentResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+            
     }
 
     public static function getRelations(): array

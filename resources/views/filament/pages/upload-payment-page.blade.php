@@ -45,10 +45,10 @@
             <form wire:submit="submitPayment" class="space-y-6">
                 {{ $this->form }}
 
-                <button> 
-                  <input  class="button" type="submit" form="submitPayment">
-                    Unggah Bukti Pembayaran
-                </button>
+                <button><input  class="button" type="submit" form="submitPayment"></button>
+                  
+                   
+                
             </form>
         </div>
     </x-filament::section>
