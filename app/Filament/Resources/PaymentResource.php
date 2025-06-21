@@ -197,8 +197,8 @@ class PaymentResource extends Resource
 
                 // Perbarui status langganan user
                 $user->subscription_start_at = now();
-                $user->subscription_ends_at = now()->addDays($subscriptionPackage->duration_days); // Durasi dari paket
-                $user->save(); // Simpan perubahan user
+                $user->subscription_ends_at = now()->addDays($subscriptionPackage->duration_days); 
+                $user->save(); 
 
                 \Illuminate\Support\Facades\DB::commit();
 

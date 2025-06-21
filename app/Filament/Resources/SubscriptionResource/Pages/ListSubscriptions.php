@@ -10,6 +10,8 @@ class ListSubscriptions extends ListRecords
 {
     protected static string $resource = SubscriptionResource::class;
 
+    protected static ?string $title = 'Pengelolaan Langganan ✨';
+
     protected function getHeaderActions(): array
     {
         return [

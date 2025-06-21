@@ -108,12 +108,30 @@
                       ✨ Rekomendasi untuk pengalaman optimal
                   </p>
                   <br>
-                {{-- Tombol untuk mengarahkan ke UploadPaymentPage dengan parameter paket --}}
-                <button class="button">
-                  <a href="{{ \App\Filament\Pages\UploadPaymentPage::getUrl(['package' => 'premium_30_days', 'amount' => 20000]) }}"wire:navigate>
-                    Pilih Paket Langganan Ini 👆
-                </a></button>
+                  @php
+                $packageSlug = 'premium_30_days';
+                $packageAmount = 20000;
+                $targetUrl = '#'; 
 
+            if (Auth::check() && !Auth::user()->isAdmin()) {
+                if (Auth::user()->isActiveSubscriber()) {
+                    // Jika user sudah berlangganan aktif, arahkan ke halaman konfirmasi
+                    $targetUrl = \App\Filament\Pages\SubscriptionConfirmation::getUrl();
+                } else {
+                    // Jika user belum berlangganan, arahkan ke halaman upload pembayaran
+                    $targetUrl = \App\Filament\Pages\UploadPaymentPage::getUrl(['package' => $packageSlug, 'amount' => $packageAmount]);
+                }
+            } else {
+                // Jika belum login atau admin, arahkan ke halaman upload pembayaran (asumsi akan login/register dulu)
+                $targetUrl = \App\Filament\Pages\UploadPaymentPage::getUrl(['package' => $packageSlug, 'amount' => $packageAmount]);
+            }
+          @endphp
+
+                <button class="button">
+                  <a href="{{ $targetUrl }}"wire:navigate>
+                    Pilih Paket Langganan Ini 👆
+                </a>
+              </button>
             </div>
 
             {{-- Card Paket Premium 90 Hari --}}
@@ -151,9 +169,27 @@
                       🌟 Pilihan terbaik untuk nilai dan keuntungan
                   </p>
                   <br>
+                  @php
+                    $packageSlug = 'premium_90_days';
+                    $packageAmount = 55000;
+                    $targetUrl = '#'; 
+
+                  if (Auth::check() && !Auth::user()->isAdmin()) {
+                if (Auth::user()->isActiveSubscriber()) {
+                    // Jika user sudah berlangganan aktif, arahkan ke halaman konfirmasi
+                    $targetUrl = \App\Filament\Pages\SubscriptionConfirmation::getUrl();
+                } else {
+                    // Jika user belum berlangganan, arahkan ke halaman upload pembayaran
+                    $targetUrl = \App\Filament\Pages\UploadPaymentPage::getUrl(['package' => $packageSlug, 'amount' => $packageAmount]);
+                }
+            } else {
+                // Jika belum login atau admin, arahkan ke halaman upload pembayaran (asumsi akan login/register dulu)
+                $targetUrl = \App\Filament\Pages\UploadPaymentPage::getUrl(['package' => $packageSlug, 'amount' => $packageAmount]);
+            }
+                  @endphp
                 {{-- Tombol untuk mengarahkan ke UploadPaymentPage dengan parameter paket --}}
                 <button class="button">
-                <a href="{{ \App\Filament\Pages\UploadPaymentPage::getUrl(['package' => 'premium_90_days', 'amount' => 55000]) }}"wire:navigate>
+                  <a href="{{ $targetUrl }}"wire:navigate>
                     Pilih Paket Langganan Ini 👆
                 </a></button>
             </div>

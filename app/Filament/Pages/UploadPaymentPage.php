@@ -174,7 +174,7 @@ class UploadPaymentPage extends Page implements HasForms
 
     public static function shouldRegisterNavigation(): bool
     {
-        return Auth::check() && !Auth::user()->isAdmin('admin');
+        return Auth::check() && !Auth::user()->isAdmin();
     }
 
     public static function canAccess(): bool

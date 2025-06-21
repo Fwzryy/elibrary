@@ -7,10 +7,10 @@
             </h1>
             {{-- Pesan Selamat Datang Dinamis --}}
             @if($user)
-                <p class="fi-header-subheading text-base text-gray-500 dark:text-gray-400">
+                <p class="fi-header-subheading text-base text-gray-800 dark:text-white">
                     Selamat datang, {{ $user->name }}!
                     @if($is_admin)
-                        <span class="text-primary-500 font-semibold">(Administrator)</span>
+                        <span class="text-primary-500 font-semibold ">(Administrator)</span>
                     @endif
                 </p>
             @endif

@@ -9,8 +9,11 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Support\Facades\Auth; 
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -100,7 +103,6 @@ class User extends Authenticatable
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Izinkan user dengan role 'admin' untuk mengakses panel
-        return $this->isAdmin();
+        return Auth::check();
     }
 }

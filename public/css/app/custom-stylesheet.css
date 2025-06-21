@@ -1,0 +1,30 @@
+
+.fi-body .fi-layout .fi-sidebar {
+
+}
+
+.fi-sidebar-item .fi-sidebar-item-button {
+  padding: 1rem;
+}
+.fi-sidebar-item.fi-sidebar-item-active .fi-sidebar-item-button {
+  border-right: indigo 4px solid;
+  background-color: rgb(247, 236, 255);
+}
+
+.dark .fi-sidebar-item.fi-sidebar-item-active .fi-sidebar-item-button {
+  border-right:  rgb(232, 200, 255) 4px solid;
+  background-color: rgba(240, 211, 255, 0.268);
+}
+
+.fi-body .fi-layout .fi-main-ctn {
+background: linear-gradient(90deg,rgba(255, 242, 224, 1) 0%, rgba(192, 201, 238, 1)
+ 46%, rgba(162, 170, 219, 1)
+ 90%, rgba(137, 138, 196, 1) 100%);
+} 
+
+.dark .fi-body .fi-layout .fi-main-ctn {
+background: linear-gradient(90deg,rgba(255, 242, 224, 0.326) 0%, rgba(192, 201, 238, 0.219)
+ 46%, rgba(162, 170, 219, 0.394)
+ 90%, rgba(137, 138, 196, 0.422) 100%);
+} 
+

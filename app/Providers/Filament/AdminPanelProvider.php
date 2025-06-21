@@ -47,8 +47,11 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->login()
             ->registration()
+            ->emailVerification()
+            ->passwordReset()
             ->colors([
                 'primary' => Color::Violet,
+                'secondary' => Color::Lime,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -88,7 +91,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->resources([ // Tambahkan array ini
+            ->resources([ 
             PaymentResource::class,
             ReadHistoryResource::class,
         ]);
