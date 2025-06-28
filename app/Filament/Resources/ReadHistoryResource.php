@@ -103,4 +103,9 @@ class ReadHistoryResource extends Resource
     {
         return (Auth::user())->isAdmin();
     }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Data Riwayat Baca Pengguna ⏱️';
+    }
 }

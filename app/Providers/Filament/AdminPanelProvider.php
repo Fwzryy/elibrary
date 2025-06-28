@@ -29,6 +29,7 @@ use App\Filament\Pages\PricingPage;
 use App\Filament\Pages\ReadingHistory;
 use App\Filament\Pages\UploadPaymentPage;
 use App\Filament\Pages\LibraryManagement;
+use App\Filament\Pages\LoginPage;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\AdminOverview;
@@ -45,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->brandName('Elibrary.')
             ->spa()
-            ->login()
+            ->login(LoginPage::class)
             ->registration()
             ->emailVerification()
             ->passwordReset()
@@ -92,8 +93,8 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->resources([ 
-            PaymentResource::class,
-            ReadHistoryResource::class,
+                PaymentResource::class,
+                ReadHistoryResource::class,
         ]);
     }
 }

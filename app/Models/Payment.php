@@ -22,7 +22,6 @@ class Payment extends Model
      */
     protected $fillable = [
     'user_id',
-    // 'subscription_package_id',
     'amount',
     'status',
     'payment_method',
@@ -34,11 +33,7 @@ class Payment extends Model
     'approved_at',
 ];
   
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+
     protected $casts = [
         'amount' => 'decimal:2', 
         'status' => \App\Enums\PaymentStatus::class,

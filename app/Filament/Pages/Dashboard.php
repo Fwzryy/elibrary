@@ -2,19 +2,20 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Pages\Dashboard as BaseDashboard;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
-use App\Filament\Widgets\SubscriptionStatusWidget; 
-use App\Filament\Widgets\LatestBooksWidget; 
-use App\Filament\Widgets\AdminStatsOverview;
-use App\Filament\Widgets\ContinueReadingWidget;
-use App\Filament\Widgets\PopularBooksChart;
-use App\Filament\Widgets\PremiumUserGrowthChart;
-use App\Filament\Widgets\RevenueChart;
-use App\Filament\Widgets\UserCategoryReadChart;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Filament\Widgets\AccountWidget;
+use Illuminate\Support\Facades\Auth;
+use App\Filament\Widgets\RevenueChart;
+use Filament\Widgets\FilamentInfoWidget;
+use App\Filament\Widgets\PopularBooksChart;
+use App\Filament\Widgets\AdminStatsOverview;
+use App\Filament\Widgets\LatestBooksWidget; 
+use Filament\Pages\Dashboard as BaseDashboard;
+use App\Filament\Widgets\ContinueReadingWidget;
+use App\Filament\Widgets\UserCategoryReadChart;
+use App\Filament\Widgets\PremiumUserGrowthChart;
+use App\Filament\Widgets\UserProfileSummaryWidget;
+use App\Filament\Widgets\SubscriptionStatusWidget; 
 
 class Dashboard extends BaseDashboard
 {
@@ -42,17 +43,15 @@ class Dashboard extends BaseDashboard
         } else {
             // Widget untuk USER di dashboard utama
             return [
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                UserProfileSummaryWidget::class,
+                ContinueReadingWidget::class,
                 UserCategoryReadChart::class, 
                 SubscriptionStatusWidget::class,
-                ContinueReadingWidget::class,
                 LatestBooksWidget::class,
             ];
         }
     }
 
-    // Metode untuk menyediakan data ke header Blade kustom
     public function getHeader(): ?\Illuminate\Contracts\View\View
     {
         return view('filament.pages.dashboard-header', [

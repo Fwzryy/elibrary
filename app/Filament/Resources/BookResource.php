@@ -41,28 +41,34 @@ class BookResource extends Resource
         return $form // Struktur Form
             ->schema([
                 Select::make('category_id')
-                  ->label('Category') 
-                  ->relationship('category', 'name')// relasi ke model Category, tampilkan kolom 'name'
+                  ->label('Kategori') 
+                  ->relationship('category', 'name')
                   ->required(),
                 TextInput::make('title')
                   ->required()
+                  ->label('Judul Buku')
                   ->maxLength(255),
                 TextInput::make('author')
                   ->required()
-                  ->maxLength(255),
+                  ->maxLength(255)
+                  ->label('Penulis'),
                 TextInput::make('publisher')
                   ->required()
-                  ->maxLength(255),
+                  ->maxLength(255)
+                  ->label('Penerbit'),
                 TextInput::make('publication_year')
-                  ->numeric() // Pastikan hanya angka
-                  ->maxLength(4) // Batasi 4 digit untuk tahun
+                  ->numeric() 
+                  ->maxLength(4)
+                  ->label('Tahun Terbit')
                   ->required(),
                 Textarea::make('description')
                   ->maxLength(65535)
+                  ->label('Sinopsis Buku')
                   ->columnSpanFull()
                   ->rows(5),
                 FileUpload::make('cover_image')
                   ->image()
+                  ->label('Gambar Cover Buku')
                   ->required()
                   ->disk('public')
                   ->directory('covers')
@@ -70,7 +76,7 @@ class BookResource extends Resource
                   ->imageEditor()
                   ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp']),
                 FileUpload::make('file_path')
-                  ->label('Book File (PDF)')
+                  ->label('File Buku (PDF)')
                   ->required()
                   ->disk('public')
                   ->directory('books')
@@ -86,7 +92,7 @@ class BookResource extends Resource
                   ->maxLength(255)
                   ->nullable(),
                 Toggle::make('is_free')
-                  ->label('Is Free?') // Label yang akan ditampilkan di form
+                  ->label('Jadikan Gratis?') // Label yang akan ditampilkan di form
                   ->helperText('Set ke ON Jika buku Gratis, OFF Jika buku ini harus Berlangganan untuk di akses.') 
                   ->default(false)
                   ->inline(false)
@@ -241,5 +247,10 @@ class BookResource extends Resource
     public static function canDeleteAny(): bool
     {
         return (Auth::user())->isAdmin();
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Daftar Buku & Pengelolaan Buku 📕';
     }
 }

@@ -9,7 +9,7 @@ Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
 Route::post('/user/submit-payment', [PaymentController::class, 'store'])->name('user.submit-payment');
 
-Route::get('/buku-terbaru', [BookController::class, 'showLatestBooks'])->name('listbuku.page');
+Route::get('/daftar-buku', [BookController::class, 'showLatestBooks'])->name('listbuku.page');
 
 Route::get('/paket-langganan', [HomeController::class, 'showSubscriptionPackages'])->name('paket.langganan');
 

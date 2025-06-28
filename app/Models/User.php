@@ -30,6 +30,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'role',
         'subscription_ends_at',
         'subscription_start_at',
+        'library_id_number',
+        'profile_photo_path', 
     ];
 
     /**

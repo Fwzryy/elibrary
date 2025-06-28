@@ -9,14 +9,10 @@ class BookController extends Controller
 {
     public function showLatestBooks()
     {
-        // ------------- BAGIAN INI YANG PERLU DIUBAH -------------
         try {
-            // Mengambil semua buku, diurutkan berdasarkan tanggal terbaru,
-            // dan dibatasi hingga 12 buku.
             $latestBooks = Book::orderBy('created_at', 'desc')->take(12)->get();
         } catch (\Exception $e) {
-            // Ini adalah data dummy yang akan digunakan jika ada error database/Model
-            // Pastikan properti 'cover_image', 'title', 'author', dan 'is_free' ada di sini
+
             $latestBooks = [
                 (object)[
                     'id' => 1,

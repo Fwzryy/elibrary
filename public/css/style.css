@@ -184,11 +184,11 @@
 
     @media (max-width: 1023px) {
         .book-covers {
-            justify-content: center; /* Center pada layar kecil */
-            min-height: auto; /* Tinggi otomatis */
+            justify-content: center; 
+            min-height: auto; 
         }
         .book-cover-container {
-            position: relative; /* Susun normal pada layar kecil */
+            position: relative;
             transform: none !important;
             margin-bottom: 20px;
             display: flex;

@@ -126,29 +126,29 @@ class UserResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->headerActions([
-                Action::make('List_User_Aktif') // Nama unik aksi
-                    ->label('Daftar Pengguna Aktif Saat Ini')
-                    ->icon('heroicon-o-user-group')
-                    ->color('primary')
-                    ->modalSubmitActionLabel('Tutup') 
-                    ->modalCancelActionLabel('Batal') 
-                    ->modalHeading('Pengguna Aktif Saat Ini')
-                    ->modalDescription('Daftar pengguna yang memiliki sesi aktif.')
-                    ->modalContent(function (): \Illuminate\Contracts\View\View {
-                        // Ambil sesi aktif yang memiliki user_id (berarti user login)
-                        $activeSessions = DB::table('sessions')
-                            ->whereNotNull('user_id')
-                            ->where('last_activity', '>=', Carbon::now()->subMinutes(config('session.lifetime'))) 
-                            ->join('users', 'sessions.user_id', '=', 'users.id') 
-                            ->select('users.name', 'users.email', 'sessions.last_activity')
-                            ->get();
+           ->headerActions([
+            Action::make('List_User_Aktif')
+                ->label('Admin Aktif saat Ini ↙️')
+                ->icon('heroicon-o-user-group')
+                ->color('primary')
+                ->modalSubmitActionLabel('Tutup')
+                ->modalCancelActionLabel('Batal')
+                ->modalHeading('Daftar Admin yang sedang Aktif 🧑‍💼')
+                ->modalDescription('Daftar ini memperlihatkan semua administrator yang sedang aktif login, berdasarkan sesi terakhir mereka di sistem.')
+                ->modalContent(function (): \Illuminate\Contracts\View\View {
+                    $activeSessions = DB::table('sessions')
+                        ->whereNotNull('user_id')
+                        ->where('last_activity', '>=', Carbon::now()->subMinutes(config('session.lifetime')))
+                        ->join('users', 'sessions.user_id', '=', 'users.id')
+                        ->where('users.role', 'admin')
+                        ->select('users.name', 'users.email', 'sessions.last_activity')
+                        ->get();
 
-                        return view('filament.admin.modals.active-users-list', [
-                            'activeSessions' => $activeSessions,
-                        ]);
-                    }),
-            ]);
+                    return view('filament.admin.modals.active-users-list', [
+                        'activeSessions' => $activeSessions,
+                    ]);
+                }),
+        ]);
     }
 
     public static function getRelations(): array
@@ -199,5 +199,10 @@ class UserResource extends Resource
     public static function canDeleteAny(): bool
     {
         return (Auth::user())->isAdmin();
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Daftar Pengguna 👤';
     }
 }

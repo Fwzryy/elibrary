@@ -35,13 +35,11 @@ class SubscriptionResource extends Resource
                     ->required()
                     ->searchable()
                     ->label('User')
-                    // Tambahkan logging di sini
                     ->getSearchResultsUsing(fn (string $search) =>
                         \App\Models\User::where('name', 'like', "%{$search}%")->limit(50)->get()->mapWithKeys(fn ($record) => [$record->getKey() => $record->getAttribute('name')])
                     )
                     ->getOptionLabelUsing(fn ($value): ?string => \App\Models\User::find($value)?->name),
 
-                     // Tanggal Mulai Langganan
                 Forms\Components\DatePicker::make('start_date')
                     ->required()
                     ->default(now())
@@ -65,11 +63,6 @@ class SubscriptionResource extends Resource
                     ->required()
                     ->default('pending'),
 
-                // Forms\Components\Toggle::make('is_active')
-                //     ->label('Is Active?')
-                //     ->default(true)
-                //     ->inline(false),
-
                 Forms\Components\TextInput::make('amount')
                     ->label('Amount')
                     ->numeric()
@@ -89,7 +82,6 @@ class SubscriptionResource extends Resource
                     ->label('Payment Method')
                     ->options([
                         'manual' => 'Manual Transfer',
-                        // Tambahkan opsi pembayaran lain sesuai kebutuhan
                     ])
                     ->nullable(),
 

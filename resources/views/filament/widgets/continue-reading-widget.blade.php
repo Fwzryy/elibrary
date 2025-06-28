@@ -9,9 +9,9 @@
                 {{-- Cover Buku --}}
                 @if($lastReadHistory->book->cover_image)
                     <img src="{{ Storage::url($lastReadHistory->book->cover_image) }}"
-                        style="box-shadow: rgba(248, 222, 255, 0.25) 0px 50px 100px -10px, rgba(254, 208, 255, 0.3) 0px 30px 60px -20px;"
+                        style="box-shadow: rgba(248, 222, 255, 0.25) 0px 50px 100px -10px, rgba(254, 208, 255, 0.3) 0px 30px 60px -20px; width: 100px; height: 135px"
                         alt="{{ $lastReadHistory->book->title }}"
-                        class="w-24 h-32 object-cover rounded-lg shadow-md" />
+                        class=" object-cover rounded-lg shadow-md" />
                 @else
                     <div class="w-24 h-32 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
                         No Cover
@@ -41,9 +41,9 @@
         @else
             <div class="text-center py-8">
                 <p class="text-gray-500 text-lg mb-4">Anda belum memulai membaca buku apapun. Ayo temukan buku favorit Anda!</p>
-               <a href="{{ \App\Filament\Resources\BookResource::getUrl('index') }}"
-                   class="filament-button inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-                   wire:navigate>
+                <a href="{{ \App\Filament\Resources\BookResource::getUrl('index') }}"
+                  class="filament-button inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                  wire:navigate>
                     Telusuri Koleksi Buku
                 </a>
             </div>

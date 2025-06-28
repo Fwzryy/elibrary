@@ -8,17 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LatestBooksWidget extends Widget
 {
-    // Ini menunjuk ke view Blade kustom untuk widget ini
     protected static string $view = 'filament.widgets.latest-books-widget';
     protected static ?string $heading = 'Buku-Buku Terbaru nih! 🆕'; 
-    protected int | string | array $columnSpan = 1;
-    // Properti untuk menyimpan data buku terbaru
+    protected int | string | array $columnSpan = 2;
     public array $latestBooks = [];
 
     protected function getViewData(): array
     {
-        // Mengambil 5 buku terbaru, diurutkan berdasarkan created_at secara descending
-        // dan mengonversinya ke array.
         $this->latestBooks = Book::latest()->take(5)->get()->toArray();
 
         return [

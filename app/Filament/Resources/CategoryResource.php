@@ -132,4 +132,9 @@ class CategoryResource extends Resource
         $user = Auth::user();
         return $user && ! $user->isAdmin();
     }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Pengelolaan Kategori 🔖';
+    }
 }

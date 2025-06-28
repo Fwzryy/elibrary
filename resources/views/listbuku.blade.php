@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elibrary - Expand Your Mind</title>
+    <title>Elibrary - Koleksi Buku Lengkap</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -91,7 +92,7 @@
 
     <section class="bg-gray-100 py-16 md:py-24 px-4">
         <div class="container mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">Koleksi Buku-Buku Terbaru! 🆕</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">Koleksi Buku-Buku Kami! 📙</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
               @forelse ($latestBooks as $book)
                 <div class="bg-white p-6 rounded-2xl shadow-md flex flex-col items-center text-center hover:shadow-xl transition duration-300">
@@ -113,10 +114,24 @@
                 </span>
             @endif
         </div>
-        
+
+        <div class="mt-auto pt-4  w-full flex justify-center gap-4">
+                            <button
+                                type="button"
+                                class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-300 transition"
+                                x-data="{}"
+                                x-on:click="$dispatch('open-synopsis-modal', {
+                                    title: '{{ addslashes($book->title) }}',
+                                    author: '{{ addslashes($book->author) }}',
+                                    cover: '{{ asset('storage/' . addslashes($book->cover_image)) }}',
+                                    description: '{{ addslashes($book->description) }}'
+                                })"
+                            >
+                                Sinopsis
+                            </button>
+                        </div>
                 </div>
               @empty
-                  {{-- Teks ini akan ditampilkan jika tidak ada buku di database --}}
               <p class="text-gray-300 text-center col-span-full">Belum ada buku terbaru yang tersedia.</p>
               @endforelse
             </div>
@@ -273,7 +288,6 @@
             delay: 200
         });
 
-
         // Animasi Section "Apa Kata Mereka"
         ScrollReveal().reveal('section:nth-of-type(3) .text-center.relative', {
             origin: 'top',
@@ -340,5 +354,59 @@
             delay: 100
         });
     </script>
+
+    <div x-data="{
+            showModal: false,
+            modalTitle: '',
+            modalAuthor: '',
+            modalCover: '',
+            modalDescription: '',
+            openModal(event) {
+                this.modalTitle = event.detail.title;
+                this.modalAuthor = event.detail.author;
+                this.modalCover = event.detail.cover;
+                this.modalDescription = event.detail.description;
+                this.showModal = true;
+            }
+        }"
+        x-on:open-synopsis-modal.window="openModal($event)"
+        x-show="showModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style="display: none;">
+
+        {{-- Overlay --}}
+        <div class="fixed inset-0 bg-gray-900/75" aria-hidden="true"></div>
+
+        {{-- Modal Panel --}}
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-lg mx-auto transform transition-all">
+            {{-- Tombol Tutup --}}
+            <button type="button" x-on:click="showModal = false"
+                    class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="flex items-start gap-4 mb-4">
+                <img x-bind:src="modalCover" alt="Cover" class="w-24 h-32 object-cover rounded-lg flex-shrink-0" x-show="modalCover" />
+                <div class="flex-grow">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white" x-text="modalTitle"></h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400" x-text="'Oleh: ' + modalAuthor"></p>
+                </div>
+            </div>
+
+            <hr class="my-4 border-t border-gray-200 dark:border-gray-700">
+
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Sinopsis:</h4>
+            
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed max-h-60 overflow-y-auto">
+                <span x-text="modalDescription"></span>
+            </p>
+        </div>
+    </div>
 </body>
 </html>

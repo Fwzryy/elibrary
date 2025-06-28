@@ -4,7 +4,7 @@
         <div class="mb-4">
             <a href="{{ \App\Filament\Resources\BookResource::getUrl('index') }}"
                class="filament-button inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold outline-none transition duration-75 hover:bg-gray-50 focus:ring-1 focus:ring-inset dark:hover:bg-gray-500/50 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-primary-600"
-               wire:navigate>
+              wire:navigate>
                 <x-heroicon-o-arrow-left class="w-4 h-4" />
                 Kembali ke Daftar Buku
             </a>
